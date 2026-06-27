@@ -1,0 +1,221 @@
+# Título do Notebook
+# Hands-on: Agrupamento e Agregação no Pandas
+# Autor: [O seu nome/Instituição]
+# Data: 8 de Julho de 2025
+
+# Célula de Markdown
+"""
+## Agrupamento e Agregação no Pandas: Sumarizar Dados por Categorias
+
+Na análise de dados, é muito comum querermos sumarizar dados com base em categorias. Por exemplo, calcular a média de notas por disciplina, a soma de vendas por região, ou a contagem de ocorrências de um evento. O Pandas oferece uma funcionalidade poderosa para isto, conhecida como **"group by"** (agrupar por) e **agregação**.
+
+O processo geralmente envolve três passos:
+1.  **Split (Dividir):** Dividir o DataFrame em grupos com base em uma ou mais chaves (colunas).
+2.  **Apply (Aplicar):** Aplicar uma função de agregação (como média, soma, contagem, etc.) a cada grupo.
+3.  **Combine (Combinar):** Combinar os resultados dos grupos de volta num novo DataFrame.
+"""
+
+# Célula de Código
+import pandas as pd
+import numpy as np
+
+# Célula de Markdown
+"""
+### Preparação: Criar um DataFrame de Exemplo
+
+Vamos usar um DataFrame de exemplo que inclui informações sobre estudantes, as suas disciplinas e notas.
+"""
+
+# Célula de Código
+dados_estudantes_detalhe = {
+    'Nome': ['Ana', 'Bruno', 'Carla', 'Diogo', 'Eva', 'Filipe', 'Ana', 'Bruno'],
+    'Idade': [16, 17, 16, 17, 18, 16, 16, 17],
+    'Disciplina': ['Matemática', 'Física', 'Biologia', 'Química', 'Matemática', 'Física', 'Física', 'Química'],
+    'Nota': [15, 12, 18, 9, 17, 14, 16, 11],
+    'Cidade': ['Lisboa', 'Porto', 'Lisboa', 'Coimbra', 'Porto', 'Lisboa', 'Lisboa', 'Porto']
+}
+df_estudantes_agrupamento = pd.DataFrame(dados_estudantes_detalhe)
+print("DataFrame de Estudantes Detalhado:\n", df_estudantes_agrupamento)
+
+# Célula de Markdown
+"""
+### 1. Agrupar por uma Única Coluna e Aplicar Agregação
+
+O método `.groupby()` é usado para agrupar os dados. Depois de agrupar, podemos aplicar uma função de agregação.
+
+#### 1.1. Média de Notas por Disciplina
+
+**Exemplo:** Calcular a média das notas para cada disciplina.
+"""
+
+# Célula de Código
+media_notas_por_disciplina = df_estudantes_agrupamento.groupby('Disciplina')['Nota'].mean()
+print("Média de Notas por Disciplina:\n", media_notas_por_disciplina)
+print(f"Tipo do objeto resultante: {type(media_notas_por_disciplina)}") # É uma Series
+
+# Célula de Markdown
+"""
+**Explicação:**
+* `df_estudantes_agrupamento.groupby('Disciplina')`: Divide o DataFrame em grupos, um para cada valor único na coluna 'Disciplina'.
+* `['Nota']`: Seleciona a coluna 'Nota' para a qual queremos aplicar a agregação.
+* `.mean()`: Calcula a média para a coluna 'Nota' em cada grupo.
+
+#### 1.2. Contagem de Estudantes por Cidade
+
+**Exemplo:** Contar quantos estudantes vêm de cada cidade.
+"""
+
+# Célula de Código
+contagem_por_cidade = df_estudantes_agrupamento.groupby('Cidade')['Nome'].count()
+print("\nContagem de Estudantes por Cidade:\n", contagem_por_cidade)
+
+# Célula de Markdown
+"""
+#### 1.3. Soma de Faltas por Idade (Simulado)
+
+Vamos adicionar uma coluna de faltas para este exemplo.
+"""
+
+# Célula de Código
+df_estudantes_agrupamento['Faltas'] = [2, 0, 1, 5, 0, 3, 1, 2] # Adicionar coluna de faltas
+print("\nDataFrame com Faltas:\n", df_estudantes_agrupamento)
+
+soma_faltas_por_idade = df_estudantes_agrupamento.groupby('Idade')['Faltas'].sum()
+print("\nSoma de Faltas por Idade:\n", soma_faltas_por_idade)
+
+# Célula de Markdown
+"""
+**Experimentem:**
+
+1.  Calculem a nota máxima obtida em cada `Disciplina`.
+2.  Calculem a idade mínima de um estudante em cada `Cidade`.
+"""
+
+# Célula de Código (para o exercício)
+nota_max_por_disciplina = df_estudantes_agrupamento.groupby('Disciplina')['Nota'].max()
+print("Nota Máxima por Disciplina:\n", nota_max_por_disciplina)
+
+idade_min_por_cidade = df_estudantes_agrupamento.groupby('Cidade')['Idade'].min()
+print("\nIdade Mínima por Cidade:\n", idade_min_por_cidade)
+
+
+# Célula de Markdown
+"""
+---
+
+### 2. Agrupar por Múltiplas Colunas
+
+Podemos agrupar os dados por mais de uma coluna, passando uma lista de nomes de colunas para o `groupby()`.
+
+**Exemplo:** Média de notas por `Disciplina` E por `Idade`.
+"""
+
+# Célula de Código
+media_notas_disciplina_idade = df_estudantes_agrupamento.groupby(['Disciplina', 'Idade'])['Nota'].mean()
+print("Média de Notas por Disciplina e Idade:\n", media_notas_disciplina_idade)
+print(f"Tipo do objeto resultante: {type(media_notas_disciplina_idade)}")
+print(f"Índice resultante: {media_notas_disciplina_idade.index}") # Notem o MultiIndex
+
+# Célula de Markdown
+"""
+O resultado é uma Series com um `MultiIndex`, o que significa que tem múltiplos níveis de índice.
+
+**Experimentem:**
+
+1.  Calculem a contagem de estudantes por `Cidade` e por `Disciplina`.
+"""
+
+# Célula de Código (para o exercício)
+contagem_cidade_disciplina = df_estudantes_agrupamento.groupby(['Cidade', 'Disciplina'])['Nome'].count()
+print("Contagem de Estudantes por Cidade e Disciplina:\n", contagem_cidade_disciplina)
+
+
+# Célula de Markdown
+"""
+---
+
+### 3. Aplicar Múltiplas Funções de Agregação (`.agg()`)
+
+Às vezes, queremos calcular várias estatísticas para os mesmos grupos (ex: média, mínimo e máximo). Podemos fazer isso usando o método `.agg()`.
+
+**Exemplo:** Média, mínimo e máximo das notas por disciplina.
+"""
+
+# Célula de Código
+estatisticas_notas_por_disciplina = df_estudantes_agrupamento.groupby('Disciplina')['Nota'].agg(['mean', 'min', 'max', 'count'])
+print("Estatísticas de Notas por Disciplina:\n", estatisticas_notas_por_disciplina)
+
+# Célula de Markdown
+"""
+Podemos também renomear as colunas resultantes ou aplicar funções diferentes a colunas diferentes.
+
+**Exemplo:** Média da nota e soma das faltas por disciplina.
+"""
+
+# Célula de Código
+estatisticas_personalizadas = df_estudantes_agrupamento.groupby('Disciplina').agg(
+    Media_Nota=('Nota', 'mean'),
+    Soma_Faltas=('Faltas', 'sum'),
+    Num_Estudantes=('Nome', 'count')
+)
+print("\nEstatísticas Personalizadas por Disciplina:\n", estatisticas_personalizadas)
+
+# Célula de Markdown
+"""
+**Experimentem:**
+
+1.  Para cada `Idade`, calculem a `média` da `Nota` e o `desvio padrão` (`std`) da `Nota`.
+"""
+
+# Célula de Código (para o exercício)
+estatisticas_nota_por_idade = df_estudantes_agrupamento.groupby('Idade')['Nota'].agg(['mean', 'std'])
+print("Estatísticas de Nota por Idade:\n", estatisticas_nota_por_idade)
+
+
+# Célula de Markdown
+"""
+---
+
+### 4. Resetar o Índice (`.reset_index()`)
+
+Quando agrupamos, as colunas usadas para agrupar tornam-se o índice do novo DataFrame/Series. Se quisermos que estas colunas voltem a ser colunas normais, podemos usar `.reset_index()`.
+
+**Exemplo:**
+"""
+
+# Célula de Código
+media_notas_reset = df_estudantes_agrupamento.groupby('Disciplina')['Nota'].mean().reset_index()
+print("Média de Notas por Disciplina (com índice resetado):\n", media_notas_reset)
+print(f"Tipo do objeto resultante: {type(media_notas_reset)}") # Agora é um DataFrame
+
+# Célula de Markdown
+"""
+**Experimentem:**
+
+1.  Agrupem o `df_estudantes_agrupamento` por `Cidade` e calculem a `média` da `Idade`.
+2.  Apliquem `.reset_index()` ao resultado e imprimam.
+"""
+
+# Célula de Código (para o exercício)
+media_idade_por_cidade = df_estudantes_agrupamento.groupby('Cidade')['Idade'].mean()
+print("Média de Idade por Cidade (Series):\n", media_idade_por_cidade)
+
+media_idade_por_cidade_df = media_idade_por_cidade.reset_index()
+print("\nMédia de Idade por Cidade (DataFrame após reset_index):\n", media_idade_por_cidade_df)
+
+
+# Célula de Markdown
+"""
+---
+
+### Resumo
+
+O agrupamento e a agregação são ferramentas incrivelmente poderosas no Pandas para sumarizar e obter *insights* dos vossos dados.
+
+* `groupby()`: O método chave para dividir os dados em grupos.
+* Funções de agregação: `mean()`, `sum()`, `count()`, `min()`, `max()`, `std()`, etc.
+* `agg()`: Permite aplicar múltiplas funções de agregação ou funções personalizadas.
+* `reset_index()`: Converte o índice de volta para colunas normais.
+
+Dominar estas técnicas é fundamental para qualquer análise de dados séria.
+"""

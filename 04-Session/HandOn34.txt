@@ -1,0 +1,204 @@
+# Título do Notebook
+# Hands-on: Exercícios Práticos - Matplotlib
+# Autor: [O seu nome/Instituição]
+# Data: 8 de Julho de 2025
+
+# Célula de Markdown
+"""
+## Exercícios Práticos: Visualização de Dados Científicos com Matplotlib
+
+É hora de aplicar os vossos conhecimentos de Matplotlib para visualizar dados científicos reais (ou simulados) das vossas disciplinas! Estes exercícios vão consolidar a vossa capacidade de criar gráficos informativos e claros.
+
+Lembrem-se de usar as células de código para as vossas soluções e de as executar para testar.
+
+Boa sorte!
+"""
+
+# Célula de Código
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Célula de Markdown
+"""
+---
+
+### Exercício 1 (Físico-Química): Curva de Titulação
+
+**Cenário:** Numa titulação ácido-base, o pH da solução varia à medida que o volume de titulante adicionado aumenta.
+
+**Dados:**
+* `volume_titulante_ml = np.array([0, 5, 10, 15, 20, 22, 23, 24, 25, 26, 27, 28, 30, 35, 40])`
+* `ph_solucao = np.array([2.0, 2.2, 2.5, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 11.5, 11.8, 12.0])`
+
+**Tarefa:**
+1.  Crie um gráfico de linhas que represente a curva de titulação (pH vs. volume de titulante).
+2.  Adicione um título apropriado ao gráfico.
+3.  Adicione rótulos aos eixos X e Y.
+4.  Adicione uma grelha ao gráfico.
+"""
+
+# Célula de Código (para o Exercício 1)
+volume_titulante_ml = np.array([0, 5, 10, 15, 20, 22, 23, 24, 25, 26, 27, 28, 30, 35, 40])
+ph_solucao = np.array([2.0, 2.2, 2.5, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 11.5, 11.8, 12.0])
+
+plt.figure(figsize=(10, 6))
+plt.plot(volume_titulante_ml, ph_solucao, marker='o', linestyle='-', color='purple')
+plt.title("Curva de Titulação Ácido-Base")
+plt.xlabel("Volume de Titulante (mL)")
+plt.ylabel("pH da Solução")
+plt.grid(True)
+plt.show()
+
+
+# Célula de Markdown
+"""
+---
+
+### Exercício 2 (Biologia e Geologia): Comparação de Crescimento de Plantas
+
+**Cenário:** Um biólogo mediu a altura de dois grupos de plantas (Grupo A e Grupo B) ao longo de 5 semanas.
+
+**Dados:**
+* `semanas = np.array([1, 2, 3, 4, 5])`
+* `altura_grupo_a = np.array([5, 8, 12, 17, 23])`
+* `altura_grupo_b = np.array([4, 7, 10, 14, 19])`
+
+**Tarefa:**
+1.  Crie um único gráfico de linhas que compare o crescimento do Grupo A e do Grupo B.
+2.  Use cores e/ou estilos de linha diferentes para cada grupo.
+3.  Adicione um título, rótulos aos eixos e uma legenda para identificar cada grupo.
+4.  Adicione marcadores aos pontos de dados.
+"""
+
+# Célula de Código (para o Exercício 2)
+semanas = np.array([1, 2, 3, 4, 5])
+altura_grupo_a = np.array([5, 8, 12, 17, 23])
+altura_grupo_b = np.array([4, 7, 10, 14, 19])
+
+plt.figure(figsize=(10, 6))
+plt.plot(semanas, altura_grupo_a, marker='o', linestyle='-', color='green', label='Grupo A')
+plt.plot(semanas, altura_grupo_b, marker='x', linestyle='--', color='red', label='Grupo B')
+plt.title("Comparação do Crescimento de Plantas")
+plt.xlabel("Semanas")
+plt.ylabel("Altura (cm)")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
+# Célula de Markdown
+"""
+---
+
+### Exercício 3 (Matemática/Física): Distribuição de Erros de Medição
+
+**Cenário:** Numa série de medições, os erros podem ser representados por uma distribuição normal (curva de sino).
+
+**Tarefa:**
+1.  Gere 1000 pontos de dados aleatórios que sigam uma distribuição normal, com média `0` e desvio padrão `1`. (Usem `np.random.randn(1000)`).
+2.  Crie um histograma desses dados.
+    * Um histograma mostra a distribuição de frequência dos dados.
+    * Usem `plt.hist(dados, bins=numero_de_barras)`.
+3.  Adicione um título, rótulos aos eixos e uma grelha.
+"""
+
+# Célula de Código (para o Exercício 3)
+# 1. Gerar dados aleatórios com distribuição normal
+erros_medicao = np.random.randn(1000) # 1000 pontos, média 0, desvio padrão 1
+
+# 2. Criar o histograma
+plt.figure(figsize=(10, 6))
+plt.hist(erros_medicao, bins=30, color='skyblue', edgecolor='black', alpha=0.7) # bins = número de barras
+plt.title("Distribuição de Erros de Medição (Normal)")
+plt.xlabel("Valor do Erro")
+plt.ylabel("Frequência")
+plt.grid(True, linestyle=':', alpha=0.6)
+plt.show()
+
+
+# Célula de Markdown
+"""
+---
+
+### Exercício 4 (Biologia e Geologia): Diagrama de Barras de Composição de Solo
+
+**Cenário:** Análise da percentagem de diferentes componentes num tipo de solo.
+
+**Dados:**
+* `componentes = ['Areia', 'Silte', 'Argila', 'Matéria Orgânica']`
+* `percentagens = np.array([45, 30, 20, 5])`
+
+**Tarefa:**
+1.  Crie um gráfico de barras para mostrar a percentagem de cada componente do solo.
+2.  Adicione um título e rótulos aos eixos.
+3.  Personalize as cores das barras.
+"""
+
+# Célula de Código (para o Exercício 4)
+componentes = ['Areia', 'Silte', 'Argila', 'Matéria Orgânica']
+percentagens = np.array([45, 30, 20, 5])
+
+plt.figure(figsize=(9, 6))
+plt.bar(componentes, percentagens, color=['sandybrown', 'lightgrey', 'brown', 'darkgreen'])
+plt.title("Composição Percentual de um Tipo de Solo")
+plt.xlabel("Componente do Solo")
+plt.ylabel("Percentagem (%)")
+plt.ylim(0, 100) # Define o limite do eixo Y de 0 a 100
+plt.grid(axis='y', linestyle=':', alpha=0.7) # Grelha apenas no eixo Y
+plt.show()
+
+
+# Célula de Markdown
+"""
+---
+
+### Exercício 5 (Físico-Química): Gráfico de Dispersão com Linha de Tendência (Opcional/Desafio)
+
+**Cenário:** Relação entre a temperatura e a solubilidade de um sal em água.
+
+**Dados:**
+* `temperatura_c = np.array([10, 20, 30, 40, 50, 60])`
+* `solubilidade_g_100ml = np.array([15, 22, 30, 40, 52, 65])`
+
+**Tarefa:**
+1.  Crie um gráfico de dispersão dos dados.
+2.  Adicione um título e rótulos aos eixos.
+3.  **Desafio:** Adicione uma linha de tendência linear aos dados.
+    * **Dica:** Usem `np.polyfit(x, y, grau)` para calcular os coeficientes de um polinómio (grau 1 para uma linha reta) e `np.poly1d(coeficientes)` para criar a função do polinómio. Depois, plotem essa função.
+"""
+
+# Célula de Código (para o Exercício 5)
+temperatura_c = np.array([10, 20, 30, 40, 50, 60])
+solubilidade_g_100ml = np.array([15, 22, 30, 40, 52, 65])
+
+plt.figure(figsize=(10, 6))
+plt.scatter(temperatura_c, solubilidade_g_100ml, color='blue', label='Dados de Solubilidade')
+
+# Desafio: Adicionar linha de tendência
+# Calcula os coeficientes da linha (grau 1)
+coeficientes = np.polyfit(temperatura_c, solubilidade_g_100ml, 1)
+# Cria uma função polinomial a partir dos coeficientes
+linha_tendencia = np.poly1d(coeficientes)
+
+# Gera pontos para a linha de tendência ao longo do mesmo intervalo de temperatura
+x_tendencia = np.linspace(temperatura_c.min(), temperatura_c.max(), 100)
+y_tendencia = linha_tendencia(x_tendencia)
+
+plt.plot(x_tendencia, y_tendencia, color='red', linestyle='--', label='Linha de Tendência')
+
+plt.title("Solubilidade de um Sal vs. Temperatura")
+plt.xlabel("Temperatura (°C)")
+plt.ylabel("Solubilidade (g/100mL água)")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
+# Célula de Markdown
+"""
+---
+
+Parabéns por completarem os exercícios da Sessão 4! Vocês agora são capazes de criar uma variedade de gráficos para visualizar os vossos dados científicos, o que é uma habilidade inestimável para analisar e comunicar resultados.
+
+Continuem a praticar e a explorar as muitas opções de personalização do Matplotlib!
+"""

@@ -1,0 +1,213 @@
+# Título do Notebook
+# Hands-on: Introdução ao Pandas
+# Autor: [O seu nome/Instituição]
+# Data: 8 de Julho de 2025
+
+# Célula de Markdown
+"""
+## Introdução ao Pandas: O Poder da Análise de Dados Tabulares
+
+Bem-vindos à Sessão 5! Hoje vamos mergulhar no **Pandas**, uma das bibliotecas mais poderosas e amplamente utilizadas em Python para **análise e manipulação de dados**. Se o NumPy é o pilar para dados numéricos, o Pandas é o pilar para **dados tabulares** (dados organizados em linhas e colunas, como numa folha de cálculo ou base de dados).
+
+### Por que o Pandas é Essencial?
+
+1.  **Estruturas de Dados Robustas:** O Pandas introduz duas estruturas de dados principais:
+    * **Series:** Um array unidimensional rotulado (como uma coluna de uma folha de cálculo).
+    * **DataFrame:** Uma estrutura bidimensional rotulada com colunas de diferentes tipos (como uma folha de cálculo completa).
+2.  **Manipulação de Dados Simplificada:** Permite carregar, limpar, transformar e analisar dados de forma muito eficiente e intuitiva.
+3.  **Integração:** Funciona perfeitamente com NumPy e Matplotlib, tornando o fluxo de trabalho de análise de dados muito fluido.
+
+Vamos começar por importar o Pandas. A convenção padrão é importá-lo com o alias `pd`.
+"""
+
+# Célula de Código
+import pandas as pd
+import numpy as np # Pandas é construído sobre NumPy, então é bom tê-lo por perto
+
+print("Pandas importado com sucesso como 'pd'!")
+print("NumPy importado com sucesso como 'np'!")
+
+# Célula de Markdown
+"""
+### 1. Pandas Series: Colunas Rotuladas
+
+Uma **Series** é como um array NumPy unidimensional, mas com um **rótulo (índice)** para cada elemento. Pensem nisto como uma única coluna de uma folha de cálculo, onde cada linha tem um nome (o índice).
+
+#### 1.1. Criação de uma Series
+
+Podemos criar uma Series a partir de:
+* Uma lista Python
+* Um array NumPy
+* Um dicionário Python (onde as chaves se tornam os rótulos/índices)
+"""
+
+# Célula de Código
+# A partir de uma lista
+temperaturas_series = pd.Series([22, 24, 21, 25, 23])
+print("Series de temperaturas (índice padrão):\n", temperaturas_series)
+print(f"Tipo do objeto: {type(temperaturas_series)}")
+print(f"Tipo de dados dos elementos (dtype): {temperaturas_series.dtype}")
+
+# A partir de uma lista com um índice personalizado
+dias = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex']
+temperaturas_com_indice = pd.Series([22, 24, 21, 25, 23], index=dias)
+print("\nSeries de temperaturas (com índice personalizado):\n", temperaturas_com_indice)
+
+# A partir de um dicionário
+dados_populacao = {'Lisboa': 545000, 'Porto': 214000, 'Coimbra': 143000}
+populacao_series = pd.Series(dados_populacao)
+print("\nSeries de população (a partir de dicionário):\n", populacao_series)
+
+# Célula de Markdown
+"""
+#### 1.2. Aceder a Elementos de uma Series
+
+Podemos aceder a elementos de uma Series usando o seu índice numérico (como num array NumPy) ou o seu rótulo.
+
+**Exemplo:**
+"""
+
+# Célula de Código
+print(f"Temperatura da primeira medição (índice 0): {temperaturas_series[0]}")
+print(f"Temperatura da 'Terça-feira': {temperaturas_com_indice['Ter']}")
+print(f"População de 'Porto': {populacao_series['Porto']}")
+
+# Célula de Markdown
+"""
+**Experimentem:**
+
+1.  Criem uma Series com as notas de 3 alunos (ex: 15, 18, 12) e deem-lhes os nomes "Ana", "Bruno", "Carla" como índice.
+2.  Acedam e imprimam a nota da "Ana".
+"""
+
+# Célula de Código (para o exercício)
+notas_alunos = pd.Series([15, 18, 12], index=["Ana", "Bruno", "Carla"])
+print("Notas dos alunos:\n", notas_alunos)
+print(f"Nota da Ana: {notas_alunos['Ana']}")
+
+
+# Célula de Markdown
+"""
+### 2. Pandas DataFrame: Tabelas de Dados
+
+Um **DataFrame** é a estrutura de dados mais usada no Pandas. É uma tabela bidimensional com colunas que podem ter diferentes tipos de dados. Pensem nisto como uma folha de cálculo ou uma tabela de base de dados.
+
+Cada coluna de um DataFrame é uma Series.
+
+#### 2.1. Criação de um DataFrame
+
+A forma mais comum de criar um DataFrame é a partir de um dicionário de listas ou arrays NumPy, onde as chaves do dicionário se tornam os nomes das colunas.
+"""
+
+# Célula de Código
+# A partir de um dicionário de listas
+dados_experiencia = {
+    'Tempo (s)': [0, 10, 20, 30, 40, 50],
+    'Temperatura (°C)': [25, 28, 32, 30, 29, 27],
+    'Pressão (kPa)': [100, 102, 101, 103, 100, 99]
+}
+df_experiencia = pd.DataFrame(dados_experiencia)
+print("DataFrame de dados de experiência:\n", df_experiencia)
+print(f"Tipo do objeto: {type(df_experiencia)}")
+print(f"Forma (shape): {df_experiencia.shape}") # (linhas, colunas)
+
+# Célula de Markdown
+"""
+#### 2.2. Aceder a Colunas de um DataFrame
+
+Podemos aceder a uma coluna de um DataFrame usando o seu nome (como se fosse uma chave de dicionário) ou a notação de ponto (se o nome da coluna não tiver espaços). O resultado é uma Series.
+"""
+
+# Célula de Código
+# Aceder a uma coluna usando notação de dicionário (recomendado para nomes com espaços)
+temperatura_coluna = df_experiencia['Temperatura (°C)']
+print("\nColuna 'Temperatura (°C)':\n", temperatura_coluna)
+print(f"Tipo da coluna: {type(temperatura_coluna)}")
+
+# Aceder a uma coluna usando notação de ponto (mais concisa, mas cuidado com nomes com espaços ou que coincidam com métodos)
+tempo_coluna = df_experiencia.Tempo # Funciona porque 'Tempo' não tem espaços
+print("\nColuna 'Tempo (s)' (usando notação de ponto):\n", tempo_coluna)
+
+# Célula de Markdown
+"""
+#### 2.3. Aceder a Linhas de um DataFrame (`.loc` e `.iloc`)
+
+* `.loc`: Aceder a linhas e colunas por **rótulo** (nome).
+* `.iloc`: Aceder a linhas e colunas por **posição inteira** (índice numérico).
+
+**Exemplo:**
+"""
+
+# Célula de Código
+print("Primeira linha (por posição, índice 0):\n", df_experiencia.iloc[0])
+print("\nLinha com índice 2 (por posição):\n", df_experiencia.iloc[2])
+
+# Se tivéssemos um índice personalizado para as linhas:
+df_com_indice_personalizado = pd.DataFrame(dados_experiencia, index=['Medição1', 'Medição2', 'Medição3', 'Medição4', 'Medição5', 'Medição6'])
+print("\nDataFrame com índice personalizado:\n", df_com_indice_personalizado)
+
+print("\nLinha 'Medição3' (por rótulo):\n", df_com_indice_personalizado.loc['Medição3'])
+
+# Célula de Markdown
+"""
+#### 2.4. Informações Básicas sobre o DataFrame
+
+* `.head(n)`: Mostra as primeiras `n` linhas (padrão é 5).
+* `.tail(n)`: Mostra as últimas `n` linhas.
+* `.info()`: Fornece um resumo conciso do DataFrame, incluindo tipos de dados e valores não nulos.
+* `.describe()`: Gera estatísticas descritivas (média, desvio padrão, min, max, quartis) para colunas numéricas.
+* `.columns`: Lista os nomes das colunas.
+* `.index`: Lista o índice das linhas.
+
+**Exemplo:**
+"""
+
+# Célula de Código
+print("Primeiras 3 linhas:\n", df_experiencia.head(3))
+print("\nÚltimas 2 linhas:\n", df_experiencia.tail(2))
+print("\nInformações do DataFrame:")
+df_experiencia.info()
+print("\nEstatísticas descritivas:\n", df_experiencia.describe())
+print(f"\nNomes das colunas: {df_experiencia.columns}")
+print(f"Índice das linhas: {df_experiencia.index}")
+
+# Célula de Markdown
+"""
+**Experimentem:**
+
+1.  Criem um DataFrame com dados de 3 alunos: `Nome`, `Idade`, `Altura (cm)`.
+2.  Imprimam as primeiras 2 linhas.
+3.  Imprimam apenas a coluna `Altura (cm)`.
+4.  Usem `.describe()` para ver as estatísticas da idade e altura.
+"""
+
+# Célula de Código (para o exercício)
+dados_alunos = {
+    'Nome': ['Carlos', 'Diana', 'Eduardo'],
+    'Idade': [16, 17, 16],
+    'Altura (cm)': [175, 168, 180]
+}
+df_alunos = pd.DataFrame(dados_alunos)
+print("DataFrame de alunos:\n", df_alunos)
+
+print("\nPrimeiras 2 linhas:\n", df_alunos.head(2))
+
+print("\nColuna 'Altura (cm)':\n", df_alunos['Altura (cm)'])
+
+print("\nEstatísticas descritivas dos alunos:\n", df_alunos.describe())
+
+
+# Célula de Markdown
+"""
+---
+
+### Resumo
+
+* **Pandas** é a biblioteca essencial para trabalhar com dados tabulares.
+* **Series** são colunas unidimensionais com rótulos.
+* **DataFrames** são tabelas bidimensionais, compostas por Series.
+* Podem aceder a colunas por nome e a linhas por rótulo (`.loc`) ou posição (`.iloc`).
+* Métodos como `.head()`, `.info()`, `.describe()` são cruciais para explorar os vossos dados.
+
+Na próxima secção, vamos aprofundar na criação de DataFrames a partir de diferentes fontes.
+"""

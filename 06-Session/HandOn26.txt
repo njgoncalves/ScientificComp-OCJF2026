@@ -1,0 +1,169 @@
+# Título do Notebook
+# Hands-on: Projeto Orientado 1 (Físico-Química)
+# Autor: Norberto Jorge Gonçalves / DF, ECT, UTAD
+# Data: 8 de Julho de 2025
+
+# Célula de Markdown
+"""
+## Projeto Orientado 1: Análise de Dados de Cinética Química
+
+Neste mini-projeto, vamos aplicar as vossas competências em Pandas, NumPy e Matplotlib para analisar dados de uma experiência de cinética química.
+
+**Cenário:** Um estudante de Físico-Química realizou uma experiência para estudar a decomposição de um reagente ao longo do tempo. Ele mediu a concentração do reagente em intervalos regulares.
+
+**Objetivos:**
+* Carregar e explorar os dados.
+* Calcular a taxa de consumo do reagente.
+* Visualizar a diminuição da concentração ao longo do tempo.
+* Determinar a meia-vida da reação (tempo para a concentração cair para metade).
+"""
+
+# Célula de Código
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import io
+
+# Célula de Markdown
+"""
+### 1. Carregar e Inspecionar os Dados
+
+Os dados da experiência são fornecidos abaixo.
+"""
+
+# Célula de Código
+csv_cinetica = """Tempo_s,Concentracao_M
+0,1.00
+10,0.82
+20,0.67
+30,0.55
+40,0.45
+50,0.37
+60,0.30
+70,0.25
+80,0.20
+"""
+
+df_cinetica = pd.read_csv(io.StringIO(csv_cinetica))
+
+print("DataFrame de Dados de Cinética Química:\n", df_cinetica)
+print("\nInformações do DataFrame:")
+df_cinetica.info()
+print("\nEstatísticas Descritivas:")
+print(df_cinetica.describe())
+
+# Célula de Markdown
+"""
+### 2. Visualizar a Variação da Concentração
+
+**Tarefa:**
+1.  Crie um gráfico de linhas da `Concentracao_M` vs. `Tempo_s`.
+2.  Adicione um título, rótulos aos eixos e uma grelha.
+3.  Adicione marcadores aos pontos de dados para maior clareza.
+"""
+
+# Célula de Código
+plt.figure(figsize=(10, 6))
+plt.plot(df_cinetica['Tempo_s'], df_cinetica['Concentracao_M'], marker='o', linestyle='-', color='darkgreen')
+plt.title("Variação da Concentração do Reagente ao Longo do Tempo")
+plt.xlabel("Tempo (s)")
+plt.ylabel("Concentração (M)")
+plt.grid(True)
+plt.show()
+
+# Célula de Markdown
+"""
+### 3. Calcular a Taxa de Consumo (Aproximada)
+
+Podemos aproximar a taxa de consumo entre cada ponto de medição como a variação da concentração dividida pela variação do tempo.
+
+**Tarefa:**
+1.  Calcule a variação da concentração (`delta_C`) entre medições consecutivas.
+    * Dica: Usem `.diff()` do Pandas.
+2.  Calcule a variação do tempo (`delta_t`) entre medições consecutivas.
+3.  Calcule a taxa de consumo (`-delta_C / delta_t`).
+    * Nota: A taxa de consumo é positiva, por isso usamos o sinal negativo.
+4.  Adicione a `Taxa_Consumo` como uma nova coluna ao DataFrame. O primeiro valor será `NaN` (Not a Number), o que é normal.
+"""
+
+# Célula de Código
+df_cinetica['delta_C'] = df_cinetica['Concentracao_M'].diff()
+df_cinetica['delta_t'] = df_cinetica['Tempo_s'].diff()
+df_cinetica['Taxa_Consumo'] = -df_cinetica['delta_C'] / df_cinetica['delta_t']
+
+print("DataFrame com Taxa de Consumo:\n", df_cinetica)
+
+# Célula de Markdown
+"""
+### 4. Visualizar a Taxa de Consumo
+
+**Tarefa:**
+1.  Crie um gráfico de dispersão da `Taxa_Consumo` vs. `Tempo_s`.
+    * Exclua o primeiro ponto (NaN) para o gráfico.
+2.  Adicione um título, rótulos aos eixos e uma grelha.
+"""
+
+# Célula de Código
+# Excluir a primeira linha que contém NaN para a taxa de consumo
+df_cinetica_plot = df_cinetica.dropna(subset=['Taxa_Consumo'])
+
+plt.figure(figsize=(10, 6))
+plt.scatter(df_cinetica_plot['Tempo_s'], df_cinetica_plot['Taxa_Consumo'], color='blue', marker='x')
+plt.title("Taxa de Consumo do Reagente ao Longo do Tempo")
+plt.xlabel("Tempo (s)")
+plt.ylabel("Taxa de Consumo (M/s)")
+plt.grid(True)
+plt.show()
+
+# Célula de Markdown
+"""
+### 5. Calcular a Meia-Vida da Reação
+
+A meia-vida ($t_{1/2}$) é o tempo necessário para que a concentração do reagente caia para metade do seu valor inicial.
+
+**Tarefa:**
+1.  Encontre a concentração inicial (no tempo = 0).
+2.  Calcule a concentração alvo para a meia-vida (metade da inicial).
+3.  Encontre o tempo correspondente à concentração mais próxima da concentração alvo.
+    * Dica: Podem usar `np.abs(df['Concentracao_M'] - concentracao_alvo).idxmin()` para encontrar o índice da linha com a concentração mais próxima.
+"""
+
+# Célula de Código
+concentracao_inicial = df_cinetica['Concentracao_M'].iloc[0]
+concentracao_meia_vida_alvo = concentracao_inicial / 2
+print(f"Concentração inicial: {concentracao_inicial:.2f} M")
+print(f"Concentração alvo para meia-vida: {concentracao_meia_vida_alvo:.2f} M")
+
+# Encontrar o índice da linha com a concentração mais próxima do alvo
+indice_meia_vida = (np.abs(df_cinetica['Concentracao_M'] - concentracao_meia_vida_alvo)).idxmin()
+
+# Obter o tempo e a concentração nessa linha
+tempo_meia_vida = df_cinetica.loc[indice_meia_vida, 'Tempo_s']
+concentracao_na_meia_vida = df_cinetica.loc[indice_meia_vida, 'Concentracao_M']
+
+print(f"\nTempo de Meia-Vida (aproximado): {tempo_meia_vida} segundos")
+print(f"Concentração no tempo de meia-vida: {concentracao_na_meia_vida:.2f} M")
+
+# Opcional: Visualizar a meia-vida no gráfico
+plt.figure(figsize=(10, 6))
+plt.plot(df_cinetica['Tempo_s'], df_cinetica['Concentracao_M'], marker='o', linestyle='-', color='darkgreen', label='Concentração')
+plt.axhline(y=concentracao_meia_vida_alvo, color='red', linestyle='--', label='Meia-Vida (Alvo)')
+plt.axvline(x=tempo_meia_vida, color='purple', linestyle=':', label=f't_1/2 = {tempo_meia_vida}s')
+plt.title("Variação da Concentração e Meia-Vida")
+plt.xlabel("Tempo (s)")
+plt.ylabel("Concentração (M)")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+# Célula de Markdown
+"""
+### Conclusão do Projeto
+
+Neste projeto de cinética química, vocês:
+* Usaram **Pandas** para carregar, inspecionar e manipular os dados da experiência.
+* Aplicaram operações **NumPy** (através do Pandas) para calcular a taxa de consumo e identificar a meia-vida.
+* Utilizaram **Matplotlib** para visualizar a curva de concentração e a taxa de consumo, e para ilustrar a meia-vida.
+
+Isto demonstra como a computação científica pode ser usada para analisar e interpretar resultados experimentais.
+"""

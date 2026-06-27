@@ -1,0 +1,138 @@
+# Título do Notebook
+# Hands-on: Estudo de Caso Simples Integrado (NumPy, Matplotlib, Pandas)
+# Autor: Norberto Jorge Gonçalves / DF, ECT, UTAD
+# Data: 8 de Julho de 2025
+
+# Célula de Markdown
+"""
+## Estudo de Caso Simples: Análise de Dados de Sensor Ambiental
+
+Nesta sessão final, vamos juntar tudo o que aprendemos! O objetivo é resolver um problema de computação científica que requer a utilização integrada do **Pandas** para manipulação de dados, do **NumPy** para operações numéricas e do **Matplotlib** para visualização.
+
+**Cenário:** Um sensor ambiental registou a temperatura e a humidade relativa ao longo de um dia. Queremos analisar estes dados para identificar tendências, calcular médias e visualizar as variações.
+
+Vamos começar por importar as bibliotecas necessárias.
+"""
+
+# Célula de Código
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import io # Para simular a leitura de CSV
+
+# Célula de Markdown
+"""
+### 1. Carregar e Inspecionar os Dados (Pandas)
+
+Os dados do sensor foram guardados num ficheiro CSV. Vamos simulá-lo aqui.
+"""
+
+# Célula de Código
+csv_dados_ambientais = """Hora,Temperatura_C,Humidade_Relativa_perc
+0,18.5,80
+2,17.9,85
+4,17.2,88
+6,17.0,90
+8,18.8,75
+10,21.5,65
+12,24.0,55
+14,26.5,48
+16,25.8,50
+18,23.1,60
+20,20.5,70
+22,19.0,78
+"""
+
+# Carregar os dados para um DataFrame
+df_ambiental = pd.read_csv(io.StringIO(csv_dados_ambientais))
+
+print("DataFrame de Dados Ambientais:\n", df_ambiental)
+print("\nInformações do DataFrame:")
+df_ambiental.info()
+print("\nEstatísticas Descritivas:")
+print(df_ambiental.describe())
+
+# Célula de Markdown
+"""
+### 2. Análise Numérica dos Dados (NumPy e Pandas)
+
+Agora que os dados estão no DataFrame, podemos usar as capacidades do NumPy (que o Pandas utiliza internamente) para realizar cálculos.
+
+**Tarefas:**
+1.  Calcular a temperatura média do dia.
+2.  Calcular a humidade relativa mínima e máxima.
+3.  Calcular a amplitude térmica (diferença entre a temperatura máxima e mínima).
+4.  Converter a temperatura de Celsius para Fahrenheit ($F = C * 9/5 + 32$) e adicionar como uma nova coluna ao DataFrame.
+"""
+
+# Célula de Código
+# 1. Temperatura média
+temp_media = df_ambiental['Temperatura_C'].mean()
+print(f"Temperatura Média do Dia: {temp_media:.2f} °C")
+
+# 2. Humidade mínima e máxima
+humidade_min = df_ambiental['Humidade_Relativa_perc'].min()
+humidade_max = df_ambiental['Humidade_Relativa_perc'].max()
+print(f"Humidade Relativa Mínima: {humidade_min}%")
+print(f"Humidade Relativa Máxima: {humidade_max}%")
+
+# 3. Amplitude térmica
+temp_max = df_ambiental['Temperatura_C'].max()
+temp_min = df_ambiental['Temperatura_C'].min()
+amplitude_termica = temp_max - temp_min
+print(f"Amplitude Térmica: {amplitude_termica:.2f} °C")
+
+# 4. Converter Celsius para Fahrenheit e adicionar nova coluna
+df_ambiental['Temperatura_F'] = df_ambiental['Temperatura_C'] * 9/5 + 32
+print("\nDataFrame com Temperatura em Fahrenheit:\n", df_ambiental)
+
+# Célula de Markdown
+"""
+### 3. Visualização dos Dados (Matplotlib)
+
+Vamos agora visualizar as tendências de temperatura e humidade ao longo do dia.
+
+**Tarefas:**
+1.  Crie um gráfico de linhas que mostre a `Temperatura_C` e a `Humidade_Relativa_perc` ao longo do `Hora`.
+2.  Use dois eixos Y diferentes (um para temperatura, outro para humidade) para que ambas as escalas sejam claras. Isto é útil quando as variáveis têm unidades e escalas muito diferentes.
+3.  Adicione títulos, rótulos aos eixos e legendas.
+"""
+
+# Célula de Código
+# Criar a figura e os eixos primários (para temperatura)
+fig, ax1 = plt.subplots(figsize=(12, 7))
+
+# Plotar a temperatura no eixo primário
+ax1.plot(df_ambiental['Hora'], df_ambiental['Temperatura_C'], color='red', marker='o', label='Temperatura (°C)')
+ax1.set_xlabel("Hora do Dia")
+ax1.set_ylabel("Temperatura (°C)", color='red')
+ax1.tick_params(axis='y', labelcolor='red')
+ax1.grid(True, linestyle=':', alpha=0.7)
+
+# Criar um segundo eixo Y que partilha o mesmo eixo X (para humidade)
+ax2 = ax1.twinx()
+ax2.plot(df_ambiental['Hora'], df_ambiental['Humidade_Relativa_perc'], color='blue', marker='x', linestyle='--', label='Humidade Relativa (%)')
+ax2.set_ylabel("Humidade Relativa (%)", color='blue')
+ax2.tick_params(axis='y', labelcolor='blue')
+
+# Título do gráfico
+plt.title("Variação de Temperatura e Humidade ao Longo do Dia")
+
+# Adicionar legendas de ambos os eixos
+lines, labels = ax1.get_legend_handles_labels()
+lines2, labels2 = ax2.get_legend_handles_labels()
+ax2.legend(lines + lines2, labels + labels2, loc='upper left')
+
+plt.show()
+
+# Célula de Markdown
+"""
+### 4. Conclusão do Estudo de Caso
+
+Neste estudo de caso simples, vimos como as três bibliotecas trabalham em conjunto:
+* **Pandas:** Para carregar, organizar e inspecionar os dados tabulares.
+* **NumPy:** Para realizar operações numéricas eficientes (como a conversão de temperatura e o cálculo de médias/min/max, que o Pandas utiliza).
+* **Matplotlib:** Para criar uma visualização clara das tendências dos dados.
+
+Esta é a essência da computação científica: recolher dados, processá-los numericamente e visualizá-los para extrair conhecimento.
+"""

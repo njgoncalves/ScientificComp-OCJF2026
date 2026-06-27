@@ -1,0 +1,162 @@
+# Título do Notebook
+# Hands-on: Projeto Orientado 2 (Biologia e Geologia)
+# Autor: Norberto Jorge Gonçalves / DF, ECT, UTAD
+# Data: 8 de Julho de 2025
+
+# Célula de Markdown
+"""
+## Projeto Orientado 2: Análise de Dados de Biodiversidade e Fatores Ambientais
+
+Neste mini-projeto, vamos aplicar as vossas competências em Pandas, NumPy e Matplotlib para analisar dados de biodiversidade e a sua relação com fatores ambientais.
+
+**Cenário:** Um grupo de biólogos e geólogos recolheu dados sobre o número de espécies de plantas e a humidade do solo em diferentes locais de um parque natural.
+
+**Objetivos:**
+* Carregar e explorar os dados.
+* Calcular estatísticas descritivas para o número de espécies e humidade.
+* Agrupar dados por tipo de habitat.
+* Visualizar a relação entre humidade do solo e número de espécies.
+"""
+
+# Célula de Código
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import io
+
+# Célula de Markdown
+"""
+### 1. Carregar e Inspecionar os Dados
+
+Os dados foram registados e estão disponíveis num formato CSV.
+"""
+
+# Célula de Código
+csv_biodiversidade = """Local,Habitat,Num_Especies_Plantas,Humidade_Solo_perc,Altitude_m
+A1,Floresta,25,70,150
+A2,Floresta,22,65,180
+B1,Campo Aberto,15,40,100
+B2,Campo Aberto,18,45,120
+C1,Margem Rio,35,90,50
+C2,Margem Rio,32,85,60
+D1,Floresta,28,75,160
+D2,Campo Aberto,16,42,110
+"""
+
+df_biodiversidade = pd.read_csv(io.StringIO(csv_biodiversidade))
+
+print("DataFrame de Dados de Biodiversidade:\n", df_biodiversidade)
+print("\nInformações do DataFrame:")
+df_biodiversidade.info()
+print("\nEstatísticas Descritivas:")
+print(df_biodiversidade.describe())
+
+# Célula de Markdown
+"""
+### 2. Análise Estatística Básica
+
+Vamos calcular algumas estatísticas para as variáveis numéricas.
+
+**Tarefa:**
+1.  Calcule a média, o mínimo e o máximo para `Num_Especies_Plantas` e `Humidade_Solo_perc`.
+2.  Calcule o desvio padrão da `Altitude_m`.
+"""
+
+# Célula de Código
+# Estatísticas para Num_Especies_Plantas
+print(f"Média de Espécies de Plantas: {df_biodiversidade['Num_Especies_Plantas'].mean():.2f}")
+print(f"Mínimo de Espécies de Plantas: {df_biodiversidade['Num_Especies_Plantas'].min()}")
+print(f"Máximo de Espécies de Plantas: {df_biodiversidade['Num_Especies_Plantas'].max()}")
+
+# Estatísticas para Humidade_Solo_perc
+print(f"\nMédia de Humidade do Solo: {df_biodiversidade['Humidade_Solo_perc'].mean():.2f}%")
+print(f"Mínimo de Humidade do Solo: {df_biodiversidade['Humidade_Solo_perc'].min()}%")
+print(f"Máximo de Humidade do Solo: {df_biodiversidade['Humidade_Solo_perc'].max()}%")
+
+# Desvio padrão da Altitude
+desvio_padrao_altitude = df_biodiversidade['Altitude_m'].std()
+print(f"\nDesvio Padrão da Altitude: {desvio_padrao_altitude:.2f} m")
+
+# Célula de Markdown
+"""
+### 3. Agrupamento por Habitat
+
+Vamos ver como o número de espécies e a humidade variam entre os diferentes tipos de `Habitat`.
+
+**Tarefa:**
+1.  Calcule a média do `Num_Especies_Plantas` por `Habitat`.
+2.  Calcule a média da `Humidade_Solo_perc` por `Habitat`.
+3.  Calcule o número de locais amostrados por `Habitat`.
+"""
+
+# Célula de Código
+media_especies_por_habitat = df_biodiversidade.groupby('Habitat')['Num_Especies_Plantas'].mean()
+print("Média de Espécies de Plantas por Habitat:\n", media_especies_por_habitat)
+
+media_humidade_por_habitat = df_biodiversidade.groupby('Habitat')['Humidade_Solo_perc'].mean()
+print("\nMédia de Humidade do Solo por Habitat:\n", media_humidade_por_habitat)
+
+contagem_locais_por_habitat = df_biodiversidade.groupby('Habitat')['Local'].count()
+print("\nNúmero de Locais Amostrados por Habitat:\n", contagem_locais_por_habitat)
+
+# Célula de Markdown
+"""
+### 4. Visualização da Relação entre Humidade e Espécies
+
+**Tarefa:**
+1.  Crie um gráfico de dispersão (`scatter plot`) mostrando a relação entre `Humidade_Solo_perc` (eixo X) e `Num_Especies_Plantas` (eixo Y).
+2.  Adicione um título, rótulos aos eixos e uma grelha.
+3.  **Desafio:** Use cores diferentes para os pontos de cada `Habitat` no gráfico de dispersão.
+    * Dica: Itere sobre os habitats únicos e plote cada grupo separadamente.
+"""
+
+# Célula de Código
+plt.figure(figsize=(10, 7))
+
+# Desafio: Plotar com cores diferentes por habitat
+cores_por_habitat = {
+    'Floresta': 'green',
+    'Campo Aberto': 'orange',
+    'Margem Rio': 'blue'
+}
+
+for habitat, grupo in df_biodiversidade.groupby('Habitat'):
+    plt.scatter(grupo['Humidade_Solo_perc'], grupo['Num_Especies_Plantas'],
+                color=cores_por_habitat[habitat], label=habitat, s=100, alpha=0.8) # s para tamanho do ponto
+
+plt.title("Relação entre Humidade do Solo e Número de Espécies de Plantas")
+plt.xlabel("Humidade do Solo (%)")
+plt.ylabel("Número de Espécies de Plantas")
+plt.grid(True)
+plt.legend(title="Habitat")
+plt.show()
+
+# Célula de Markdown
+"""
+### 5. Filtragem de Dados por Condição
+
+**Tarefa:**
+1.  Filtre o DataFrame para mostrar apenas os locais onde a `Altitude_m` é superior a `100` metros.
+2.  Filtre o DataFrame para mostrar os locais que são `Floresta` OU `Margem Rio`.
+"""
+
+# Célula de Código
+# Locais com altitude > 100m
+locais_altitude_alta = df_biodiversidade[df_biodiversidade['Altitude_m'] > 100]
+print("Locais com Altitude > 100m:\n", locais_altitude_alta)
+
+# Locais que são Floresta OU Margem Rio
+locais_floresta_ou_rio = df_biodiversidade[(df_biodiversidade['Habitat'] == 'Floresta') | (df_biodiversidade['Habitat'] == 'Margem Rio')]
+print("\nLocais que são Floresta OU Margem Rio:\n", locais_floresta_ou_rio)
+
+# Célula de Markdown
+"""
+### Conclusão do Projeto
+
+Neste projeto de biologia e geologia, vocês:
+* Usaram **Pandas** para carregar, explorar e manipular dados de campo.
+* Realizaram análises estatísticas e agrupamentos para entender as características dos dados em diferentes habitats.
+* Utilizaram **Matplotlib** para visualizar a relação entre variáveis ambientais e a biodiversidade, usando cores para distinguir habitats.
+
+Isto demonstra como a computação científica pode ser uma ferramenta valiosa para a ecologia e a geologia, ajudando a identificar padrões e relações nos ecossistemas.
+"""

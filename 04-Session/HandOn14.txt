@@ -1,0 +1,187 @@
+# Título do Notebook
+# Hands-on: Introdução ao Matplotlib
+# Autor: [O seu nome/Instituição]
+# Data: 8 de Julho de 2025
+
+# Célula de Markdown
+"""
+## Introdução ao Matplotlib: Visualização de Dados Científicos
+
+Bem-vindos à Sessão 4! Depois de aprender a manipular dados com NumPy, o próximo passo crucial na computação científica é a **visualização de dados**. É aqui que entra o **Matplotlib**, a biblioteca de plotagem mais popular em Python.
+
+O Matplotlib permite criar uma vasta gama de gráficos estáticos, animados e interativos em Python. É a ferramenta essencial para transformar os vossos dados numéricos em gráficos compreensíveis e informativos.
+
+### Por que o Matplotlib é Essencial?
+
+1.  **Compreensão de Dados:** Gráficos ajudam-nos a ver padrões, tendências e anomalias nos dados que seriam difíceis de detetar apenas olhando para números.
+2.  **Comunicação:** Uma boa visualização é fundamental para comunicar os vossos resultados científicos de forma eficaz a outros.
+3.  **Exploração:** Permite explorar diferentes aspetos dos vossos dados rapidamente, ajustando o tipo de gráfico ou os seus parâmetros.
+
+### Como Importar o Matplotlib?
+
+A convenção padrão é importar o módulo `pyplot` do Matplotlib com o alias `plt`. Façam sempre isto no início dos vossos scripts ou notebooks.
+"""
+
+# Célula de Código
+import matplotlib.pyplot as plt
+import numpy as np # Também vamos precisar do NumPy
+
+print("Matplotlib.pyplot importado com sucesso como 'plt'!")
+print("NumPy importado com sucesso como 'np'!")
+
+# Célula de Markdown
+"""
+### 1. Componentes Básicos de um Gráfico
+
+Antes de criar gráficos, é útil entender os seus componentes principais:
+
+* **Figura (`Figure`):** O contentor principal de todos os elementos do gráfico. É como a "tela" onde vamos desenhar.
+* **Eixos (`Axes`):** A área onde os dados são realmente plotados. Uma figura pode ter um ou vários conjuntos de eixos. Pensem nisto como o "gráfico individual" dentro da figura.
+* **Título (`Title`):** O título principal do gráfico.
+* **Rótulos dos Eixos (`Labels`):** Texto que descreve o que cada eixo representa (eixo X e eixo Y).
+* **Legenda (`Legend`):** Explica o que cada linha ou marcador no gráfico representa, especialmente útil quando há várias séries de dados.
+* **Linhas/Marcadores (`Lines/Markers`):** Os dados plotados propriamente ditos.
+
+Vamos criar uma figura e eixos básicos para ver isto em ação.
+"""
+
+# Célula de Código
+# Criar uma figura e um conjunto de eixos
+fig, ax = plt.subplots() # plt.subplots() cria uma figura e um conjunto de eixos
+
+# Adicionar um título aos eixos
+ax.set_title("O Meu Primeiro Gráfico")
+
+# Adicionar rótulos aos eixos
+ax.set_xlabel("Eixo X")
+ax.set_ylabel("Eixo Y")
+
+# Mostrar o gráfico (necessário em scripts Python, em Jupyter geralmente aparece automaticamente)
+plt.show()
+
+# Célula de Markdown
+"""
+### 2. Tipos de Gráficos Comuns
+
+O Matplotlib suporta uma grande variedade de tipos de gráficos. Vamos focar nos mais comuns para a computação científica.
+
+#### 2.1. Gráfico de Linhas (`plt.plot()`)
+
+Usado para mostrar a relação entre duas variáveis, geralmente para observar tendências ao longo do tempo ou de uma sequência.
+
+**Exemplo:** Variação de temperatura ao longo das horas.
+"""
+
+# Célula de Código
+horas = np.array([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24])
+temperaturas = np.array([15, 14, 13, 12, 15, 18, 22, 25, 24, 20, 18, 16, 15])
+
+plt.figure(figsize=(10, 6)) # Cria uma nova figura com tamanho específico
+plt.plot(horas, temperaturas)
+plt.title("Variação da Temperatura ao Longo do Dia")
+plt.xlabel("Hora do Dia")
+plt.ylabel("Temperatura (°C)")
+plt.grid(True) # Adiciona uma grelha ao gráfico
+plt.show()
+
+# Célula de Markdown
+"""
+#### 2.2. Gráfico de Dispersão (`plt.scatter()`)
+
+Usado para mostrar a relação entre duas variáveis numéricas, onde cada ponto representa uma observação. Útil para identificar correlações ou agrupamentos.
+
+**Exemplo:** Relação entre altura e peso de um grupo de pessoas.
+"""
+
+# Célula de Código
+alturas = np.array([1.60, 1.75, 1.80, 1.65, 1.70, 1.85, 1.72])
+pesos = np.array([60, 75, 80, 62, 68, 88, 70])
+
+plt.figure(figsize=(8, 6))
+plt.scatter(alturas, pesos, color='red', marker='o') # Personalizar cor e marcador
+plt.title("Relação entre Altura e Peso")
+plt.xlabel("Altura (m)")
+plt.ylabel("Peso (kg)")
+plt.grid(True)
+plt.show()
+
+# Célula de Markdown
+"""
+#### 2.3. Gráfico de Barras (`plt.bar()`)
+
+Usado para comparar quantidades entre diferentes categorias.
+
+**Exemplo:** Número de alunos por disciplina.
+"""
+
+# Célula de Código
+disciplinas = ['Matemática', 'Física', 'Biologia', 'Química']
+num_alunos = np.array([30, 25, 35, 28])
+
+plt.figure(figsize=(10, 6))
+plt.bar(disciplinas, num_alunos, color=['blue', 'green', 'orange', 'purple'])
+plt.title("Número de Alunos por Disciplina")
+plt.xlabel("Disciplina")
+plt.ylabel("Número de Alunos")
+plt.show()
+
+# Célula de Markdown
+"""
+### 3. Elementos Adicionais do Gráfico
+
+Vamos rever e adicionar mais alguns elementos importantes.
+
+**Exemplo:** Múltiplas linhas no mesmo gráfico.
+"""
+
+# Célula de Código
+tempo = np.linspace(0, 10, 100) # 100 pontos entre 0 e 10
+sinal1 = np.sin(tempo)
+sinal2 = np.cos(tempo)
+
+plt.figure(figsize=(10, 6))
+plt.plot(tempo, sinal1, label='Seno(t)', color='blue', linestyle='-') # Adicionar rótulo para legenda
+plt.plot(tempo, sinal2, label='Coseno(t)', color='red', linestyle='--') # Adicionar rótulo para legenda
+
+plt.title("Comparação de Funções Seno e Coseno")
+plt.xlabel("Tempo (s)")
+plt.ylabel("Amplitude")
+plt.legend() # Mostra a legenda com os rótulos definidos
+plt.grid(True)
+plt.show()
+
+# Célula de Markdown
+"""
+**Experimentem:**
+
+1.  Criem um array `anos` (ex: `[2020, 2021, 2022, 2023, 2024]`).
+2.  Criem um array `populacao` (ex: `[1000, 1050, 1100, 1155, 1210]`).
+3.  Façam um gráfico de linhas da população ao longo dos anos.
+4.  Adicionem um título, rótulos para os eixos e uma grelha.
+"""
+
+# Célula de Código (para o exercício)
+anos = np.array([2020, 2021, 2022, 2023, 2024])
+populacao = np.array([1000, 1050, 1100, 1155, 1210])
+
+plt.figure(figsize=(9, 5))
+plt.plot(anos, populacao, marker='o', linestyle='-', color='green') # Adicionei marcadores para visualização
+plt.title("Crescimento Populacional ao Longo dos Anos")
+plt.xlabel("Ano")
+plt.ylabel("População")
+plt.grid(True)
+plt.show()
+
+# Célula de Markdown
+"""
+---
+
+### Resumo
+
+* **Matplotlib** é a biblioteca padrão para visualização de dados em Python.
+* Permite criar gráficos de linhas, dispersão, barras e muitos outros.
+* Os componentes chave são a **Figura** e os **Eixos**.
+* Podem personalizar títulos, rótulos, legendas e adicionar grelhas para melhorar a clareza.
+
+Na próxima secção, vamos aprofundar na criação de gráficos mais complexos e na plotagem de funções matemáticas e dados de arrays NumPy.
+"""

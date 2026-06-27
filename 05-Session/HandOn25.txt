@@ -1,0 +1,183 @@
+# Título do Notebook
+# Hands-on: Criação de DataFrames
+# Autor: [O seu nome/Instituição]
+# Data: 8 de Julho de 2025
+
+# Célula de Markdown
+"""
+## Criação de DataFrames: Construindo as Vossas Tabelas de Dados
+
+Nesta secção, vamos explorar as diferentes formas de criar DataFrames no Pandas. Embora a leitura de ficheiros seja a forma mais comum de obter dados para um DataFrame, é útil saber como construí-los a partir de estruturas de dados Python básicas.
+"""
+
+# Célula de Código
+import pandas as pd
+import numpy as np
+
+# Célula de Markdown
+"""
+### 1. Criar DataFrame a partir de um Dicionário de Listas/Arrays
+
+Esta é uma das formas mais intuitivas de criar um DataFrame, onde cada chave do dicionário se torna o nome de uma coluna e a lista/array associada é o seu conteúdo.
+
+**Exemplo:** Dados de medições de laboratório.
+"""
+
+# Célula de Código
+dados_laboratorio = {
+    'Amostra': ['A', 'B', 'C', 'D', 'E'],
+    'Temperatura (°C)': [20.5, 21.0, 19.8, 20.1, 20.7],
+    'pH': [7.0, 6.8, 7.2, 6.9, 7.1],
+    'Concentração (mg/L)': [120, 115, 122, 118, 125]
+}
+df_lab = pd.DataFrame(dados_laboratorio)
+print("DataFrame a partir de dicionário de listas:\n", df_lab)
+
+# Célula de Markdown
+"""
+### 2. Criar DataFrame a partir de uma Lista de Dicionários
+
+Cada dicionário na lista representa uma linha do DataFrame, onde as chaves do dicionário são os nomes das colunas.
+
+**Exemplo:** Dados de alunos.
+"""
+
+# Célula de Código
+dados_alunos = [
+    {'Nome': 'Ana', 'Idade': 16, 'Disciplina': 'Matemática', 'Nota': 18},
+    {'Nome': 'Bruno', 'Idade': 17, 'Disciplina': 'Física', 'Nota': 15},
+    {'Nome': 'Carla', 'Idade': 16, 'Disciplina': 'Biologia', 'Nota': 19},
+    {'Nome': 'Diogo', 'Idade': 17, 'Disciplina': 'Química', 'Nota': 14}
+]
+df_alunos = pd.DataFrame(dados_alunos)
+print("\nDataFrame a partir de lista de dicionários:\n", df_alunos)
+
+# Célula de Markdown
+"""
+### 3. Criar DataFrame a partir de Arrays NumPy
+
+Podemos construir um DataFrame a partir de arrays NumPy, mas precisamos de especificar os nomes das colunas.
+
+**Exemplo:** Matriz de dados de sensor.
+"""
+
+# Célula de Código
+# Matriz NumPy de dados
+dados_sensor_np = np.array([
+    [100, 200, 300],
+    [105, 210, 305],
+    [102, 205, 302]
+])
+
+# Nomes das colunas
+nomes_colunas = ['Sensor_A', 'Sensor_B', 'Sensor_C']
+
+df_sensor = pd.DataFrame(dados_sensor_np, columns=nomes_colunas)
+print("\nDataFrame a partir de array NumPy:\n", df_sensor)
+
+# Célula de Markdown
+"""
+**Experimentem:**
+
+1.  Criem um DataFrame chamado `df_frutas` a partir de um dicionário com as colunas `Fruta` e `Quantidade`. Adicionem pelo menos 3 frutas.
+2.  Criem um DataFrame chamado `df_cidades` a partir de uma lista de dicionários, onde cada dicionário tem `Cidade` e `População`. Adicionem 2 cidades.
+"""
+
+# Célula de Código (para o exercício)
+# Exercício 1: DataFrame de frutas
+df_frutas = pd.DataFrame({
+    'Fruta': ['Maçã', 'Banana', 'Laranja'],
+    'Quantidade': [10, 15, 8]
+})
+print("DataFrame de frutas:\n", df_frutas)
+
+# Exercício 2: DataFrame de cidades
+df_cidades = pd.DataFrame([
+    {'Cidade': 'Braga', 'População': 193000},
+    {'Cidade': 'Aveiro', 'População': 80000}
+])
+print("\nDataFrame de cidades:\n", df_cidades)
+
+
+# Célula de Markdown
+"""
+---
+
+### 4. Leitura de Ficheiros CSV (Comma Separated Values)
+
+Na prática, a forma mais comum de obter dados para um DataFrame é lendo-os de um ficheiro. O formato CSV é muito popular.
+
+O Pandas tem funções dedicadas para ler vários formatos de ficheiro, sendo `pd.read_csv()` a mais usada para CSV.
+
+**Nota:** Como estamos num ambiente Jupyter Notebook, não podemos aceder diretamente ao vosso sistema de ficheiros para ler ficheiros externos. No entanto, podemos simular a leitura de um ficheiro CSV criando uma string que se parece com um CSV e usando `io.StringIO`.
+
+**Exemplo:** Simular a leitura de dados de um sensor de temperatura de um CSV.
+"""
+
+# Célula de Código
+import io # Módulo para trabalhar com streams de texto
+
+csv_data = """Data,Temperatura,Humidade
+2025-07-01,25.3,60
+2025-07-02,26.1,62
+2025-07-03,24.9,58
+2025-07-04,27.5,65
+"""
+
+# pd.read_csv pode ler de um caminho de ficheiro ou de um objeto tipo ficheiro (como StringIO)
+df_sensor_csv = pd.read_csv(io.StringIO(csv_data))
+print("DataFrame lido de uma string CSV simulada:\n", df_sensor_csv)
+print(f"Tipos de dados das colunas:\n{df_sensor_csv.dtypes}")
+
+# Célula de Markdown
+"""
+**Notas sobre `pd.read_csv()`:**
+* **`filepath_or_buffer`:** O caminho para o ficheiro CSV.
+* **`sep`:** O delimitador (padrão é vírgula `,`). Pode ser `;`, `\t` (tabulação), etc.
+* **`header`:** O número da linha a usar como nomes das colunas (padrão é 0, a primeira linha).
+* **`index_col`:** A coluna a usar como índice das linhas.
+* **`parse_dates`:** Lista de colunas a tentar interpretar como datas.
+
+**Exemplo:** Leitura de um CSV com delimitador diferente e data como índice.
+"""
+
+# Célula de Código
+csv_data_semicolon = """ID;Nome;Valor
+1;ProdutoA;10.5
+2;ProdutoB;22.3
+3;ProdutoC;5.9
+"""
+df_produtos = pd.read_csv(io.StringIO(csv_data_semicolon), sep=';')
+print("\nDataFrame lido de CSV com ponto e vírgula:\n", df_produtos)
+
+# Célula de Markdown
+"""
+**Experimentem (simulando CSV):**
+
+1.  Criem uma string multi-linha que represente um CSV de dados de alunos com as colunas `Aluno`, `Nota_Mat`, `Nota_Fis`. Usem vírgula como separador.
+2.  Leiam esta string CSV para um DataFrame.
+3.  Imprimam o DataFrame resultante.
+"""
+
+# Célula de Código (para o exercício)
+csv_alunos = """Aluno,Nota_Mat,Nota_Fis
+Joana,16,14
+Miguel,18,17
+Sofia,15,16
+"""
+df_alunos_csv = pd.read_csv(io.StringIO(csv_alunos))
+print("DataFrame de alunos lido de CSV simulado:\n", df_alunos_csv)
+
+
+# Célula de Markdown
+"""
+---
+
+### Resumo
+
+* DataFrames podem ser criados a partir de dicionários de listas/arrays ou listas de dicionários.
+* Podem ser construídos a partir de arrays NumPy, especificando os nomes das colunas.
+* A leitura de ficheiros CSV (com `pd.read_csv()`) é a forma mais comum de carregar dados reais.
+
+Dominar a criação de DataFrames é o primeiro passo para qualquer análise de dados no Pandas.
+"""

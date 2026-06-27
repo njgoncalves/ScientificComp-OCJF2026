@@ -1,0 +1,231 @@
+# Título do Notebook
+# Hands-on: Seleção e Filtragem de Dados no Pandas
+# Autor: [O seu nome/Instituição]
+# Data: 8 de Julho de 2025
+
+# Célula de Markdown
+"""
+## Seleção e Filtragem de Dados no Pandas
+
+Uma vez que temos os nossos dados num DataFrame, uma das tarefas mais frequentes é selecionar subconjuntos específicos de dados (colunas, linhas ou células) e filtrar linhas com base em certas condições. O Pandas oferece várias formas poderosas e flexíveis de fazer isto.
+"""
+
+# Célula de Código
+import pandas as pd
+import numpy as np
+
+# Célula de Markdown
+"""
+### Preparação: Criar um DataFrame de Exemplo
+
+Vamos criar um DataFrame de exemplo para os nossos exercícios.
+"""
+
+# Célula de Código
+dados_estudantes = {
+    'Nome': ['Ana', 'Bruno', 'Carla', 'Diogo', 'Eva', 'Filipe'],
+    'Idade': [16, 17, 16, 17, 18, 16],
+    'Disciplina': ['Matemática', 'Física', 'Biologia', 'Química', 'Matemática', 'Física'],
+    'Nota': [15, 12, 18, 9, 17, 14],
+    'Faltas': [2, 0, 1, 5, 0, 3]
+}
+df_estudantes = pd.DataFrame(dados_estudantes)
+print("DataFrame de Estudantes:\n", df_estudantes)
+
+# Célula de Markdown
+"""
+### 1. Seleção de Colunas
+
+#### 1.1. Selecionar uma Única Coluna
+
+Podemos selecionar uma única coluna usando a notação de dicionário `df['Nome_da_Coluna']` ou a notação de ponto `df.Nome_da_Coluna`. O resultado é uma Pandas Series.
+"""
+
+# Célula de Código
+nomes = df_estudantes['Nome']
+print("Coluna 'Nome' (Series):\n", nomes)
+print(f"Tipo do objeto: {type(nomes)}")
+
+idades = df_estudantes.Idade # Funciona porque 'Idade' não tem espaços
+print("\nColuna 'Idade' (Series):\n", idades)
+
+# Célula de Markdown
+"""
+#### 1.2. Selecionar Múltiplas Colunas
+
+Para selecionar múltiplas colunas, passamos uma **lista de nomes de colunas** para o DataFrame. O resultado é um novo DataFrame.
+"""
+
+# Célula de Código
+colunas_selecionadas = df_estudantes[['Nome', 'Nota', 'Disciplina']]
+print("\nDataFrame com colunas 'Nome', 'Nota', 'Disciplina':\n", colunas_selecionadas)
+print(f"Tipo do objeto: {type(colunas_selecionadas)}")
+
+# Célula de Markdown
+"""
+**Experimentem:**
+
+1.  Selecionem e imprimam a coluna `Faltas`.
+2.  Selecionem e imprimam as colunas `Nome` e `Idade`.
+"""
+
+# Célula de Código (para o exercício)
+print("Coluna 'Faltas':\n", df_estudantes['Faltas'])
+print("\nColunas 'Nome' e 'Idade':\n", df_estudantes[['Nome', 'Idade']])
+
+
+# Célula de Markdown
+"""
+---
+
+### 2. Seleção de Linhas
+
+#### 2.1. Seleção por Posição Numérica Inteira (`.iloc`)
+
+Usem `.iloc` para selecionar linhas por índices numéricos (posições). Funciona como a indexação de arrays NumPy.
+"""
+
+# Célula de Código
+primeira_linha = df_estudantes.iloc[0]
+print("Primeira linha (índice 0):\n", primeira_linha)
+
+linhas_multiplas = df_estudantes.iloc[1:4] # Linhas do índice 1 (inclusive) ao 4 (exclusive)
+print("\nLinhas 1 a 3:\n", linhas_multiplas)
+
+# Célula de Markdown
+"""
+#### 2.2. Seleção por Rótulo do Índice (`.loc`)
+
+Usem `.loc` para selecionar linhas por rótulos do índice. Se o vosso DataFrame tiver um índice numérico padrão (0, 1, 2...), `.loc` ainda funciona com esses números como rótulos.
+
+**Exemplo:**
+"""
+
+# Célula de Código
+# Se o índice for numérico padrão
+linha_por_rotulo = df_estudantes.loc[2]
+print("Linha com rótulo de índice 2:\n", linha_por_rotulo)
+
+# Se tivéssemos um índice personalizado (ex: nomes dos alunos como índice)
+df_estudantes_com_indice_nome = df_estudantes.set_index('Nome')
+print("\nDataFrame com 'Nome' como índice:\n", df_estudantes_com_indice_nome)
+
+linha_ana = df_estudantes_com_indice_nome.loc['Ana']
+print("\nLinha da Ana (usando rótulo 'Ana'):\n", linha_ana)
+
+# Célula de Markdown
+"""
+**Experimentem:**
+
+1.  Selecionem e imprimam a última linha do `df_estudantes` usando `.iloc`.
+2.  Selecionem e imprimam as linhas do índice 0 e 4 do `df_estudantes` usando `.iloc` (passando uma lista de índices).
+"""
+
+# Célula de Código (para o exercício)
+print("Última linha:\n", df_estudantes.iloc[-1])
+print("\nLinhas 0 e 4:\n", df_estudantes.iloc[[0, 4]])
+
+
+# Célula de Markdown
+"""
+---
+
+### 3. Filtragem de Linhas por Condição (Indexação Booleana)
+
+Esta é uma das operações mais poderosas no Pandas. Podemos usar expressões booleanas para selecionar linhas que satisfazem uma ou mais condições.
+
+**Sintaxe:** `df[condicao_booleana]`
+
+A `condicao_booleana` é uma Series de `True`/`False` com o mesmo número de linhas do DataFrame. Apenas as linhas onde a condição é `True` são selecionadas.
+
+**Exemplo:** Selecionar estudantes com nota superior a 15.
+"""
+
+# Célula de Código
+estudantes_aprovados = df_estudantes[df_estudantes['Nota'] > 15]
+print("Estudantes com nota superior a 15:\n", estudantes_aprovados)
+
+# Célula de Markdown
+"""
+Podemos combinar múltiplas condições usando operadores lógicos:
+* `&` (AND)
+* `|` (OR)
+* `~` (NOT)
+
+**Importante:** Cada condição deve estar entre parênteses.
+
+**Exemplo:** Estudantes com idade de 16 anos E que tenham 0 faltas.
+"""
+
+# Célula de Código
+condicao_complexa = (df_estudantes['Idade'] == 16) & (df_estudantes['Faltas'] == 0)
+estudantes_especificos = df_estudantes[condicao_complexa]
+print("\nEstudantes com 16 anos e 0 faltas:\n", estudantes_especificos)
+
+# Exemplo: Estudantes de Matemática OU Biologia
+estudantes_disciplinas = df_estudantes[(df_estudantes['Disciplina'] == 'Matemática') | (df_estudantes['Disciplina'] == 'Biologia')]
+print("\nEstudantes de Matemática ou Biologia:\n", estudantes_disciplinas)
+
+# Célula de Markdown
+"""
+**Experimentem:**
+
+1.  Selecionem e imprimam os estudantes que reprovaram (Nota menor que 10).
+2.  Selecionem e imprimam os estudantes que têm mais de 16 anos E cuja nota é superior a 14.
+3.  Selecionem e imprimam os estudantes que são de Física OU que têm 0 faltas.
+"""
+
+# Célula de Código (para o exercício)
+estudantes_reprovados = df_estudantes[df_estudantes['Nota'] < 10]
+print("Estudantes reprovados:\n", estudantes_reprovados)
+
+estudantes_condicao_2 = df_estudantes[(df_estudantes['Idade'] > 16) & (df_estudantes['Nota'] > 14)]
+print("\nEstudantes com mais de 16 anos E nota superior a 14:\n", estudantes_condicao_2)
+
+estudantes_condicao_3 = df_estudantes[(df_estudantes['Disciplina'] == 'Física') | (df_estudantes['Faltas'] == 0)]
+print("\nEstudantes de Física OU com 0 faltas:\n", estudantes_condicao_3)
+
+
+# Célula de Markdown
+"""
+---
+
+### 4. Seleção Combinada de Linhas e Colunas
+
+Podemos combinar `.loc` ou `.iloc` com a seleção de colunas para obter subconjuntos específicos do DataFrame.
+
+**Sintaxe:** `df.loc[linhas, colunas]` ou `df.iloc[linhas, colunas]`
+
+**Exemplo:** Apenas os nomes e notas dos estudantes com nota superior a 15.
+"""
+
+# Célula de Código
+nomes_e_notas_aprovados = df_estudantes.loc[df_estudantes['Nota'] > 15, ['Nome', 'Nota']]
+print("Nomes e notas dos estudantes com nota > 15:\n", nomes_e_notas_aprovados)
+
+# Célula de Markdown
+"""
+**Experimentem:**
+
+1.  Selecionem as colunas `Disciplina` e `Faltas` para os estudantes com `Idade` igual a 17.
+"""
+
+# Célula de Código (para o exercício)
+disciplina_e_faltas_17_anos = df_estudantes.loc[df_estudantes['Idade'] == 17, ['Disciplina', 'Faltas']]
+print("Disciplina e faltas dos estudantes com 17 anos:\n", disciplina_e_faltas_17_anos)
+
+
+# Célula de Markdown
+"""
+---
+
+### Resumo
+
+A seleção e filtragem são operações diárias na análise de dados com Pandas:
+* **Seleção de Colunas:** `df['coluna']` (Series) ou `df[['col1', 'col2']]` (DataFrame).
+* **Seleção de Linhas:** `.iloc` (por posição numérica) e `.loc` (por rótulo/nome).
+* **Filtragem por Condição:** `df[condicao_booleana]` usando operadores lógicos (`&`, `|`, `~`).
+* **Seleção Combinada:** `df.loc[linhas, colunas]` para subconjuntos específicos.
+
+Dominar estas técnicas é fundamental para extrair a informação que vos interessa dos vossos conjuntos de dados.
+"""

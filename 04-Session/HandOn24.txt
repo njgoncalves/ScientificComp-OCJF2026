@@ -1,0 +1,184 @@
+# Título do Notebook
+# Hands-on: Criação de Gráficos Simples com Matplotlib
+# Autor: [O seu nome/Instituição]
+# Data: 8 de Julho de 2025
+
+# Célula de Markdown
+"""
+## Criação de Gráficos Simples: Plotagem de Funções e Arrays NumPy
+
+Nesta secção, vamos aprofundar na criação de gráficos usando o Matplotlib, focando na plotagem de funções matemáticas e na visualização direta de dados de arrays NumPy.
+
+### Preparação
+
+Certifiquem-se que têm o Matplotlib e o NumPy importados.
+"""
+
+# Célula de Código
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Célula de Markdown
+"""
+### 1. Plotagem de Funções Matemáticas
+
+Para plotar uma função matemática, precisamos de gerar um conjunto de valores para o eixo X (o domínio da função) e, a partir desses valores, calcular os valores correspondentes para o eixo Y (a imagem da função). O NumPy é excelente para gerar estes pontos.
+
+**Exemplo:** Plotar a função $y = x^2$.
+"""
+
+# Célula de Código
+# Gerar valores para o eixo X
+x = np.linspace(-5, 5, 100) # 100 pontos entre -5 e 5
+
+# Calcular os valores correspondentes para Y
+y = x**2
+
+# Criar o gráfico
+plt.figure(figsize=(8, 6))
+plt.plot(x, y, color='purple', linestyle='--', label='$y = x^2$') # Usar LaTeX para a expressão
+plt.title("Gráfico da Função $y = x^2$")
+plt.xlabel("Valor de X")
+plt.ylabel("Valor de Y")
+plt.grid(True)
+plt.legend()
+plt.show()
+
+# Célula de Markdown
+"""
+**Exemplo:** Plotar funções trigonométricas.
+"""
+
+# Célula de Código
+x_trig = np.linspace(0, 2 * np.pi, 200) # 200 pontos entre 0 e 2*Pi
+y_seno = np.sin(x_trig)
+y_coseno = np.cos(x_trig)
+
+plt.figure(figsize=(10, 6))
+plt.plot(x_trig, y_seno, label='$\sin(x)$', color='blue')
+plt.plot(x_trig, y_coseno, label='$\cos(x)$', color='green', linestyle=':')
+plt.title("Funções Trigonométricas Seno e Coseno")
+plt.xlabel("Ângulo (radianos)")
+plt.ylabel("Valor")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+# Célula de Markdown
+"""
+**Experimentem:**
+
+1.  Plotem a função $y = e^{-x}$ para $x$ no intervalo de `0` a `5`. (Usem `np.exp()`).
+2.  Adicionem um título, rótulos aos eixos e uma legenda.
+"""
+
+# Célula de Código (para o exercício)
+x_exp = np.linspace(0, 5, 100)
+y_exp = np.exp(-x_exp)
+
+plt.figure(figsize=(8, 6))
+plt.plot(x_exp, y_exp, color='red', label='$y = e^{-x}$')
+plt.title("Gráfico da Função $y = e^{-x}$")
+plt.xlabel("Valor de X")
+plt.ylabel("Valor de Y")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
+# Célula de Markdown
+"""
+---
+
+### 2. Plotagem de Dados de Arrays NumPy
+
+Na maioria das vezes, estaremos a plotar dados que vêm de medições, simulações ou bases de dados, que já estarão armazenados em arrays NumPy.
+
+#### 2.1. Gráficos de Linhas com Dados Reais
+
+**Exemplo:** Dados de temperatura registados a cada hora.
+"""
+
+# Célula de Código
+horas_do_dia = np.arange(0, 24, 2) # 0, 2, ..., 22
+temperaturas_registadas = np.array([10, 9, 8, 10, 12, 15, 18, 20, 22, 21, 18, 14])
+
+plt.figure(figsize=(10, 6))
+plt.plot(horas_do_dia, temperaturas_registadas, marker='o', linestyle='-', color='blue')
+plt.title("Temperaturas Registadas ao Longo do Dia")
+plt.xlabel("Hora do Dia")
+plt.ylabel("Temperatura (°C)")
+plt.grid(True)
+plt.show()
+
+# Célula de Markdown
+"""
+#### 2.2. Gráficos de Dispersão para Relações entre Variáveis
+
+**Exemplo:** Dados de altura e peso de uma amostra.
+"""
+
+# Célula de Código
+alturas_amostra = np.array([1.60, 1.65, 1.70, 1.72, 1.75, 1.80, 1.85, 1.68, 1.73, 1.78])
+pesos_amostra = np.array([58, 62, 68, 70, 72, 78, 85, 65, 71, 76])
+
+plt.figure(figsize=(8, 6))
+plt.scatter(alturas_amostra, pesos_amostra, color='green', marker='x', s=100, alpha=0.7) # s para tamanho, alpha para transparência
+plt.title("Altura vs. Peso da Amostra")
+plt.xlabel("Altura (m)")
+plt.ylabel("Peso (kg)")
+plt.grid(True)
+plt.show()
+
+# Célula de Markdown
+"""
+#### 2.3. Gráficos de Barras para Contagens/Categorias
+
+**Exemplo:** Contagem de tipos de rochas numa área geológica.
+"""
+
+# Célula de Código
+tipos_rochas = ['Granito', 'Basalto', 'Xisto', 'Calcário', 'Arenito']
+contagens = np.array([15, 12, 8, 20, 10])
+
+plt.figure(figsize=(10, 6))
+plt.bar(tipos_rochas, contagens, color='skyblue')
+plt.title("Contagem de Tipos de Rochas")
+plt.xlabel("Tipo de Rocha")
+plt.ylabel("Contagem")
+plt.show()
+
+# Célula de Markdown
+"""
+**Experimentem:**
+
+1.  Criem dois arrays NumPy: `pressao` (ex: `[100, 105, 110, 115, 120]`) e `volume` (ex: `[20, 19, 18, 17, 16]`).
+2.  Façam um gráfico de dispersão da `pressao` vs. `volume`.
+3.  Adicionem um título e rótulos aos eixos.
+"""
+
+# Célula de Código (para o exercício)
+pressao = np.array([100, 105, 110, 115, 120])
+volume = np.array([20, 19, 18, 17, 16])
+
+plt.figure(figsize=(8, 6))
+plt.scatter(pressao, volume, color='purple', marker='^')
+plt.title("Relação Pressão vs. Volume")
+plt.xlabel("Pressão (kPa)")
+plt.ylabel("Volume (L)")
+plt.grid(True)
+plt.show()
+
+
+# Célula de Markdown
+"""
+---
+
+### Resumo
+
+* Para plotar funções, gerem pontos `x` usando `np.linspace` e calculem os `y` correspondentes.
+* Para plotar dados, usem os vossos arrays NumPy diretamente com `plt.plot()`, `plt.scatter()` ou `plt.bar()`.
+* Lembrem-se de sempre adicionar títulos, rótulos aos eixos e legendas para tornar os vossos gráficos claros e informativos.
+
+Na próxima secção, vamos praticar a criação de gráficos para cenários científicos mais específicos.
+"""
