@@ -1,20 +1,17 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "hostRequirements": {
-    "cpus": 4
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "forwardPorts": [8888],
+  "portsAttributes": {
+    "8888": {
+      "label": "JupyterLab",
+      "onAutoForward": "openBrowser"
+    }
   },
-  "waitFor": "onCreateCommand",
-  "updateContentCommand": "python3 -m pip install -r requirements.txt",
-  "postCreateCommand": "",
+  "updateContentCommand": "pip install jupyterlab -r requirements.txt",
+  "postAttachCommand": "nohup jupyter lab --ip=0.0.0.0 --no-browser --ServerApp.token='' --ServerApp.password='' --notebook-dir=. > /tmp/jupyterlab.log 2>&1 &",
   "customizations": {
-    "codespaces": {
-      "openFiles": []
-    },
     "vscode": {
-      "extensions": [
-        "ms-toolsai.jupyter",
-        "ms-python.python"
-      ]
+      "extensions": ["ms-python.python", "ms-toolsai.jupyter"]
     }
   }
 }
